@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OREVA OCR – Free Image to Text</title>
+  <title>OREVA OCR – Camera & Image to Text</title>
 
   <!-- OCR Library -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -22,21 +22,26 @@
 
     .container {
       width: 90%;
-      max-width: 500px;
+      max-width: 520px;
     }
 
     img.logo {
       width: 80px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     h1 {
       letter-spacing: 3px;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      opacity: 0.9;
+      margin-bottom: 16px;
     }
 
     input[type="file"] {
-      margin: 20px 0;
+      margin: 12px 0;
       color: white;
     }
 
@@ -44,10 +49,11 @@
       background-color: #2563eb;
       color: white;
       border: none;
-      padding: 12px 24px;
-      font-size: 16px;
+      padding: 12px 18px;
+      font-size: 15px;
       cursor: pointer;
       border-radius: 6px;
+      margin: 6px;
     }
 
     button:disabled {
@@ -55,10 +61,18 @@
       cursor: not-allowed;
     }
 
+    video, canvas {
+      width: 100%;
+      max-height: 260px;
+      margin-top: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
     textarea {
       width: 100%;
       height: 180px;
-      margin-top: 20px;
+      margin-top: 16px;
       padding: 10px;
       border-radius: 6px;
       border: none;
@@ -79,17 +93,29 @@
     <img src="logo.PNG" class="logo" alt="OREVA logo">
 
     <h1>OREVA OCR</h1>
-    <p>Free Image to Text Converter</p>
+    <p>Scan text using camera or image</p>
 
+    <!-- File upload -->
     <input type="file" id="imageInput" accept="image/*">
-    <br>
 
+    <!-- Camera controls -->
+    <div>
+      <button id="startCamera">Use Camera</button>
+      <button id="capture" disabled>Capture Photo</button>
+    </div>
+
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+
+    <!-- OCR -->
     <button id="extractBtn">Extract Text</button>
 
     <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
 
+    <button id="copyBtn">Copy Text</button>
+
     <div class="note">
-      🔒 All processing happens in your browser. No files are uploaded.
+      🔒 All OCR runs in your browser. No images are uploaded.
     </div>
   </div>
 
@@ -97,31 +123,77 @@
     const imageInput = document.getElementById("imageInput");
     const extractBtn = document.getElementById("extractBtn");
     const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
 
+    const startCameraBtn = document.getElementById("startCamera");
+    const captureBtn = document.getElementById("capture");
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let capturedImage = null;
+    let stream = null;
+
+    // Start camera
+    startCameraBtn.addEventListener("click", async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = "block";
+        captureBtn.disabled = false;
+      } catch {
+        alert("Camera access denied or not available.");
+      }
+    });
+
+    // Capture photo
+    captureBtn.addEventListener("click", () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      canvas.style.display = "block";
+
+      // Stop camera
+      stream.getTracks().forEach(track => track.stop());
+      video.style.display = "none";
+
+      capturedImage = canvas;
+    });
+
+    // OCR function
     extractBtn.addEventListener("click", () => {
-      if (!imageInput.files.length) {
-        alert("Please select an image first.");
+      let source = null;
+
+      if (capturedImage) {
+        source = capturedImage;
+      } else if (imageInput.files.length) {
+        source = imageInput.files[0];
+      } else {
+        alert("Please upload an image or use the camera.");
         return;
       }
 
       extractBtn.disabled = true;
       extractBtn.textContent = "Extracting...";
 
-      Tesseract.recognize(
-        imageInput.files[0],
-        "eng",
-        {
-          logger: m => console.log(m)
-        }
-      ).then(({ data: { text } }) => {
-        output.value = text;
-        extractBtn.disabled = false;
-        extractBtn.textContent = "Extract Text";
-      }).catch(() => {
-        alert("OCR failed. Try a clearer image.");
-        extractBtn.disabled = false;
-        extractBtn.textContent = "Extract Text";
-      });
+      Tesseract.recognize(source, "eng")
+        .then(({ data: { text } }) => {
+          output.value = text;
+          extractBtn.disabled = false;
+          extractBtn.textContent = "Extract Text";
+        })
+        .catch(() => {
+          alert("OCR failed. Try a clearer image.");
+          extractBtn.disabled = false;
+          extractBtn.textContent = "Extract Text";
+        });
+    });
+
+    // Copy text
+    copyBtn.addEventListener("click", () => {
+      output.select();
+      document.execCommand("copy");
+      alert("Text copied!");
     });
   </script>
 </body>
