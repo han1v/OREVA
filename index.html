@@ -4,269 +4,172 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <!-- Google Analytics -->
+<title>OREVA OCR – Free Image & PDF to Searchable Text</title>
+
+<!-- SEO -->
+<meta name="description" content="OREVA OCR converts images and PDFs into searchable, editable text. Download OCR-applied images and searchable PDFs. 100% free & privacy-first.">
+<meta name="keywords" content="free ocr, image to text, pdf ocr, searchable pdf, camera ocr, online ocr tool">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:title" content="OREVA OCR – Free OCR Tool">
+<meta property="og:description" content="Convert non-OCR images and PDFs into searchable files directly in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://orevaorg.github.io/OREVA/">
+<meta property="og:image" content="https://orevaorg.github.io/OREVA/logo.PNG">
+
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XBGF03C7C1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
-  gtag('config', 'G-XBGF03C7C1');
-</script> 
-  
-<title>OREVA OCR – Free Image to Text Converter Online</title>
-
-<!-- ================= SEO ================= -->
-<meta name="description" content="OREVA OCR is a free online OCR tool to convert images and PDFs into editable text. Scan text using camera, gallery, files or PDF directly in your browser.">
-<meta name="keywords" content="free ocr, image to text, pdf ocr, online ocr tool, camera ocr, extract text from image">
-<meta name="robots" content="index, follow">
-
-<!-- Open Graph (WhatsApp / Facebook / LinkedIn) -->
-<meta property="og:title" content="OREVA OCR – Free Image to Text Converter">
-<meta property="og:description" content="Convert images and PDFs to editable text using OREVA OCR. 100% free, privacy-first, works directly in your browser.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://orevaorg.github.io/OREVA/">
-<meta property="og:image" content="https://orevaorg.github.io/OREVA/logo.PNG">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OREVA OCR – Free OCR Tool">
-<meta name="twitter:description" content="Free online OCR tool to scan text from images and PDFs using your camera or files.">
-
-<!-- ================= FREE USER TRACKING ================= -->
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XXXXXXXXXX', {
-    anonymize_ip: true
-  });
+  gtag('config', 'G-XBGF03C7C1', { anonymize_ip: true });
 </script>
 
-<!-- ================= LIBRARIES ================= -->
-<!-- OCR -->
+<!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-<!-- Cropper -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
-<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
-
-<!-- PDF -->
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <style>
-:root {
-  --font-system: system-ui, -apple-system, BlinkMacSystemFont,
-                 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
 body {
   margin: 0;
-  background-color: #0f172a;
+  font-family: system-ui, Arial, sans-serif;
+  background: #0f172a;
   color: white;
-  font-family: var(--font-system);
-  line-height: 1.5;
-}
-
-main {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  width: 92%;
-  max-width: 520px;
   text-align: center;
+}
+.container {
+  max-width: 520px;
+  margin: auto;
   padding: 20px;
 }
-
-img.logo {
-  width: 78px;
-  margin-bottom: 16px;
+.logo {
+  width: 80px;
 }
-
-h1 {
-  font-size: 1.6rem;
-  letter-spacing: 2px;
-  margin-bottom: 6px;
-}
-
-p.subtitle {
-  opacity: 0.9;
-  font-size: 0.95rem;
-  margin-bottom: 18px;
-}
-
-input[type="file"] {
-  width: 100%;
-  font-size: 1rem;
-  margin-bottom: 12px;
-}
-
 button {
   width: 100%;
-  background-color: #2563eb;
+  padding: 14px;
+  margin-top: 10px;
+  background: #2563eb;
   color: white;
   border: none;
-  padding: 14px;
-  font-size: 1rem;
   border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
+  font-size: 1rem;
 }
-
 button:disabled {
-  background-color: #475569;
-  cursor: not-allowed;
+  background: #475569;
 }
-
-img#preview {
-  width: 100%;
-  max-height: 75vh;
-  margin-top: 14px;
-  border-radius: 10px;
-}
-
 textarea {
   width: 100%;
   height: 180px;
-  margin-top: 16px;
-  padding: 12px;
+  margin-top: 15px;
   border-radius: 8px;
-  border: none;
-  resize: none;
-  font-size: 0.95rem;
-  font-family: var(--font-system);
+  padding: 10px;
 }
-
-.hidden { display: none; }
-
 .note {
-  margin-top: 10px;
   font-size: 0.75rem;
   opacity: 0.7;
-}
-
-.about {
-  background-color: #020617;
-  padding: 28px 20px;
-}
-
-.about h2 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.about p {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  max-width: 700px;
-  margin: 0 auto 10px;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<main>
 <div class="container">
+  <img src="logo.PNG" class="logo">
+  <h1>OREVA OCR</h1>
+  <p>Image • PDF → Searchable Files</p>
 
-<img src="logo.PNG" class="logo" alt="OREVA logo">
+  <input type="file" id="fileInput" accept="image/*,.pdf">
 
-<h1>OREVA OCR</h1>
-<p class="subtitle">Camera • Gallery • Files • PDF → Text</p>
+  <button id="processBtn">Apply OCR</button>
 
-<input type="file" id="fileInput" accept="image/*,.pdf" capture>
+  <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
 
-<img id="preview" class="hidden">
+  <button id="downloadText" disabled>Download Text (.txt)</button>
+  <button id="downloadFile" disabled>Download OCR File</button>
 
-<button id="okBtn" class="hidden">OK – Use This Image</button>
-<button id="extractBtn" class="hidden">Extract Text</button>
-
-<textarea id="output" placeholder="Extracted text will appear here..."></textarea>
-
-<div class="note">
-🔒 All processing happens in your browser. No files are uploaded.
+  <div class="note">
+    🔒 All processing runs locally in your browser.
+  </div>
 </div>
-
-</div>
-</main>
-
-<section class="about">
-  <h2>About OREVA OCR</h2>
-  <p>OREVA OCR is a free online tool that converts images and scanned documents into editable text directly in your browser.</p>
-  <p>You can scan text using your phone camera, upload images from your gallery, select files from your device, or extract text from PDF documents.</p>
-  <p>🔐 Privacy first: All OCR processing happens locally on your device. No images or documents are uploaded or stored.</p>
-  <p>We use anonymous analytics to understand usage and improve the tool. No personal data is collected.</p>
-</section>
 
 <script>
 const fileInput = document.getElementById("fileInput");
-const preview = document.getElementById("preview");
-const okBtn = document.getElementById("okBtn");
-const extractBtn = document.getElementById("extractBtn");
 const output = document.getElementById("output");
+const processBtn = document.getElementById("processBtn");
+const downloadTextBtn = document.getElementById("downloadText");
+const downloadFileBtn = document.getElementById("downloadFile");
 
-let cropper;
-let finalImage;
+let extractedText = "";
+let finalBlob = null;
 
-fileInput.addEventListener("change", async () => {
+processBtn.onclick = async () => {
   const file = fileInput.files[0];
-  if (!file) return;
+  if (!file) return alert("Upload an image or PDF");
+
+  processBtn.textContent = "Processing...";
+  extractedText = "";
 
   if (file.type === "application/pdf") {
     const reader = new FileReader();
-    reader.onload = async function () {
+    reader.onload = async () => {
       const pdf = await pdfjsLib.getDocument(reader.result).promise;
-      const page = await pdf.getPage(1);
-      const viewport = page.getViewport({ scale: 2 });
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      preview.src = canvas.toDataURL("image/PNG");
-      startCrop();
+      const { jsPDF } = window.jspdf;
+      const pdfOut = new jsPDF();
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        const { data: { text } } = await Tesseract.recognize(canvas, "eng");
+        extractedText += text + "\n\n";
+
+        if (i > 1) pdfOut.addPage();
+        pdfOut.text(text, 10, 10);
+      }
+
+      finalBlob = pdfOut.output("blob");
+      finish();
     };
     reader.readAsArrayBuffer(file);
   } else {
-    preview.src = URL.createObjectURL(file);
-    startCrop();
+    const { data: { text } } = await Tesseract.recognize(file, "eng");
+    extractedText = text;
+    finalBlob = file;
+    finish();
   }
-});
+};
 
-function startCrop() {
-  preview.classList.remove("hidden");
-  okBtn.classList.remove("hidden");
-
-  if (cropper) cropper.destroy();
-  cropper = new Cropper(preview, { viewMode: 1, autoCropArea: 1 });
+function finish() {
+  output.value = extractedText;
+  processBtn.textContent = "Apply OCR";
+  downloadTextBtn.disabled = false;
+  downloadFileBtn.disabled = false;
 }
 
-okBtn.addEventListener("click", () => {
-  finalImage = cropper.getCroppedCanvas();
-  cropper.destroy();
-  okBtn.classList.add("hidden");
-  extractBtn.classList.remove("hidden");
-});
+downloadTextBtn.onclick = () => {
+  const blob = new Blob([extractedText], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "oreva-ocr-text.txt";
+  a.click();
+};
 
-extractBtn.addEventListener("click", () => {
-  extractBtn.textContent = "Extracting...";
-  Tesseract.recognize(finalImage, "eng")
-    .then(({ data: { text } }) => {
-      output.value = text;
-      extractBtn.textContent = "Extract Text";
-    })
-    .catch(() => {
-      alert("OCR failed. Try a clearer image.");
-      extractBtn.textContent = "Extract Text";
-    });
-});
+downloadFileBtn.onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(finalBlob);
+  a.download = "oreva-ocr-file";
+  a.click();
+};
 </script>
 
 </body>
