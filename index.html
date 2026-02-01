@@ -2,7 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OREVA OCR – Camera & Image to Text</title>
+
+  <!-- SEO -->
+  <title>Free OCR Scanner Online | Image & Camera to Text | OREVA OCR</title>
+  <meta name="description" content="Free OCR scanner online. Convert images or camera scans to editable text instantly. No signup, no upload, 100% browser-based.">
+  <meta name="keywords" content="free ocr, image to text, camera ocr, online ocr, scan image text">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="OREVA OCR – Free Image to Text Tool">
+  <meta property="og:description" content="Scan text from images or camera instantly. Free, private, browser-based OCR.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Analytics (OPTIONAL – replace G-XXXXXXXXXX) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 
   <!-- OCR Library -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -11,53 +30,53 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #0f172a;
+      background: #0f172a;
       color: white;
       font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-align: center;
     }
 
     .container {
-      width: 90%;
+      width: 92%;
       max-width: 520px;
     }
 
-    img.logo {
+    .logo {
       width: 80px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     h1 {
       letter-spacing: 3px;
-      margin-bottom: 6px;
+      margin: 6px 0;
     }
 
     p {
       opacity: 0.9;
-      margin-bottom: 16px;
+      font-size: 14px;
     }
 
     input[type="file"] {
-      margin: 12px 0;
+      margin: 14px 0;
       color: white;
     }
 
     button {
-      background-color: #2563eb;
+      background: #2563eb;
       color: white;
       border: none;
       padding: 12px 18px;
-      font-size: 15px;
-      cursor: pointer;
-      border-radius: 6px;
       margin: 6px;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     button:disabled {
-      background-color: gray;
+      background: gray;
       cursor: not-allowed;
     }
 
@@ -85,23 +104,31 @@
       font-size: 12px;
       opacity: 0.7;
     }
+
+    .seo-text {
+      margin-top: 40px;
+      text-align: left;
+      font-size: 13px;
+      opacity: 0.85;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <img src="logo.PNG" class="logo" alt="OREVA logo">
+
+    <img src="logo.png" class="logo" alt="OREVA logo">
 
     <h1>OREVA OCR</h1>
-    <p>Scan text using camera or image</p>
+    <p>Free Image & Camera to Text Converter</p>
 
-    <!-- File upload -->
+    <!-- Upload -->
     <input type="file" id="imageInput" accept="image/*">
 
-    <!-- Camera controls -->
+    <!-- Camera -->
     <div>
       <button id="startCamera">Use Camera</button>
-      <button id="capture" disabled>Capture Photo</button>
+      <button id="capture" disabled>Capture</button>
     </div>
 
     <video id="video" autoplay></video>
@@ -115,8 +142,23 @@
     <button id="copyBtn">Copy Text</button>
 
     <div class="note">
-      🔒 All OCR runs in your browser. No images are uploaded.
+      🔒 OCR runs fully in your browser. No files are uploaded.
     </div>
+
+    <!-- SEO Content -->
+    <div class="seo-text">
+      <h2>Free OCR Scanner Online</h2>
+      <p>
+        OREVA OCR is a free online optical character recognition tool that converts
+        images and camera scans into editable text instantly. This tool works fully
+        in your browser, ensuring privacy and security.
+      </p>
+      <p>
+        Use this OCR scanner for notes, documents, receipts, assignments,
+        and printed text without installing any software.
+      </p>
+    </div>
+
   </div>
 
   <script>
@@ -134,7 +176,6 @@
     let capturedImage = null;
     let stream = null;
 
-    // Start camera
     startCameraBtn.addEventListener("click", async () => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -142,25 +183,20 @@
         video.style.display = "block";
         captureBtn.disabled = false;
       } catch {
-        alert("Camera access denied or not available.");
+        alert("Camera access not available.");
       }
     });
 
-    // Capture photo
     captureBtn.addEventListener("click", () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       ctx.drawImage(video, 0, 0);
       canvas.style.display = "block";
-
-      // Stop camera
-      stream.getTracks().forEach(track => track.stop());
       video.style.display = "none";
-
+      stream.getTracks().forEach(track => track.stop());
       capturedImage = canvas;
     });
 
-    // OCR function
     extractBtn.addEventListener("click", () => {
       let source = null;
 
@@ -169,7 +205,7 @@
       } else if (imageInput.files.length) {
         source = imageInput.files[0];
       } else {
-        alert("Please upload an image or use the camera.");
+        alert("Upload an image or use the camera.");
         return;
       }
 
@@ -189,7 +225,6 @@
         });
     });
 
-    // Copy text
     copyBtn.addEventListener("click", () => {
       output.select();
       document.execCommand("copy");
