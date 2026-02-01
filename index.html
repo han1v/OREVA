@@ -1,235 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>OREVA OCR – Camera & Image to Text</title>
 
-  <!-- SEO -->
-  <title>Free OCR Scanner Online | Image & Camera to Text | OREVA OCR</title>
-  <meta name="description" content="Free OCR scanner online. Convert images or camera scans to editable text instantly. No signup, no upload, 100% browser-based.">
-  <meta name="keywords" content="free ocr, image to text, camera ocr, online ocr, scan image text">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="OREVA OCR – Free Image to Text Tool">
-  <meta property="og:description" content="Scan text from images or camera instantly. Free, private, browser-based OCR.">
-  <meta property="og:type" content="website">
+<!-- Cropper -->
+<link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
 
-  <!-- Google Analytics (OPTIONAL – replace G-XXXXXXXXXX) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-
-  <!-- OCR Library -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #0f172a;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 520px;
-    }
-
-    .logo {
-      width: 80px;
-      margin-bottom: 14px;
-    }
-
-    h1 {
-      letter-spacing: 3px;
-      margin: 6px 0;
-    }
-
-    p {
-      opacity: 0.9;
-      font-size: 14px;
-    }
-
-    input[type="file"] {
-      margin: 14px 0;
-      color: white;
-    }
-
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      margin: 6px;
-      font-size: 15px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: gray;
-      cursor: not-allowed;
-    }
-
-    video, canvas {
-      width: 100%;
-      max-height: 260px;
-      margin-top: 10px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    textarea {
-      width: 100%;
-      height: 180px;
-      margin-top: 16px;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      resize: none;
-      font-size: 14px;
-    }
-
-    .note {
-      margin-top: 12px;
-      font-size: 12px;
-      opacity: 0.7;
-    }
-
-    .seo-text {
-      margin-top: 40px;
-      text-align: left;
-      font-size: 13px;
-      opacity: 0.85;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f172a;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+.container{
+  width:95%;
+  max-width:520px;
+  text-align:center;
+}
+.logo{width:70px;margin-bottom:12px}
+button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:6px;
+  margin:6px;
+  font-size:15px;
+}
+video, img.preview{
+  width:100%;
+  max-height:70vh;
+  border-radius:8px;
+  margin-top:10px;
+}
+textarea{
+  width:100%;
+  height:180px;
+  margin-top:12px;
+  border-radius:6px;
+  padding:10px;
+  resize:none;
+}
+.hidden{display:none}
+.note{font-size:12px;opacity:.7;margin-top:8px}
+</style>
 </head>
 
 <body>
-  <div class="container">
+<div class="container">
 
-    <img src="logo.png" class="logo" alt="OREVA logo">
+<img src="logo.png" class="logo">
+<h2>OREVA OCR</h2>
+<p>Scan text using camera or image</p>
 
-    <h1>OREVA OCR</h1>
-    <p>Free Image & Camera to Text Converter</p>
+<input type="file" id="fileInput" accept="image/*"><br>
 
-    <!-- Upload -->
-    <input type="file" id="imageInput" accept="image/*">
+<button id="startCamera">Use Camera</button>
+<button id="capture" disabled>Capture</button>
 
-    <!-- Camera -->
-    <div>
-      <button id="startCamera">Use Camera</button>
-      <button id="capture" disabled>Capture</button>
-    </div>
+<video id="video" autoplay class="hidden"></video>
 
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
+<img id="preview" class="preview hidden">
+<br>
 
-    <!-- OCR -->
-    <button id="extractBtn">Extract Text</button>
+<button id="confirmCrop" class="hidden">OK – Use This</button>
+<button id="extract" class="hidden">Extract Text</button>
 
-    <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
+<textarea id="output" placeholder="Extracted text will appear here…"></textarea>
+<button id="copy">Copy Text</button>
 
-    <button id="copyBtn">Copy Text</button>
+<div class="note">🔒 OCR runs in your browser. No images uploaded.</div>
+</div>
 
-    <div class="note">
-      🔒 OCR runs fully in your browser. No files are uploaded.
-    </div>
+<script>
+const video=document.getElementById("video");
+const startCamera=document.getElementById("startCamera");
+const capture=document.getElementById("capture");
+const preview=document.getElementById("preview");
+const extract=document.getElementById("extract");
+const confirmCrop=document.getElementById("confirmCrop");
+const output=document.getElementById("output");
+const fileInput=document.getElementById("fileInput");
 
-    <!-- SEO Content -->
-    <div class="seo-text">
-      <h2>Free OCR Scanner Online</h2>
-      <p>
-        OREVA OCR is a free online optical character recognition tool that converts
-        images and camera scans into editable text instantly. This tool works fully
-        in your browser, ensuring privacy and security.
-      </p>
-      <p>
-        Use this OCR scanner for notes, documents, receipts, assignments,
-        and printed text without installing any software.
-      </p>
-    </div>
+let stream, cropper, finalImage;
 
-  </div>
+// BACK CAMERA (environment)
+startCamera.onclick=async()=>{
+  stream=await navigator.mediaDevices.getUserMedia({
+    video:{facingMode:{ideal:"environment"}}
+  });
+  video.srcObject=stream;
+  video.classList.remove("hidden");
+  capture.disabled=false;
+};
 
-  <script>
-    const imageInput = document.getElementById("imageInput");
-    const extractBtn = document.getElementById("extractBtn");
-    const output = document.getElementById("output");
-    const copyBtn = document.getElementById("copyBtn");
+// CAPTURE
+capture.onclick=()=>{
+  const canvas=document.createElement("canvas");
+  canvas.width=video.videoWidth;
+  canvas.height=video.videoHeight;
+  canvas.getContext("2d").drawImage(video,0,0);
+  preview.src=canvas.toDataURL("image/png");
 
-    const startCameraBtn = document.getElementById("startCamera");
-    const captureBtn = document.getElementById("capture");
-    const video = document.getElementById("video");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+  stream.getTracks().forEach(t=>t.stop());
+  video.classList.add("hidden");
+  preview.classList.remove("hidden");
+  confirmCrop.classList.remove("hidden");
 
-    let capturedImage = null;
-    let stream = null;
+  cropper=new Cropper(preview,{viewMode:1,autoCropArea:1});
+};
 
-    startCameraBtn.addEventListener("click", async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        video.style.display = "block";
-        captureBtn.disabled = false;
-      } catch {
-        alert("Camera access not available.");
-      }
-    });
+// FILE UPLOAD
+fileInput.onchange=e=>{
+  const file=e.target.files[0];
+  preview.src=URL.createObjectURL(file);
+  preview.classList.remove("hidden");
+  confirmCrop.classList.remove("hidden");
+  cropper=new Cropper(preview,{viewMode:1,autoCropArea:1});
+};
 
-    captureBtn.addEventListener("click", () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0);
-      canvas.style.display = "block";
-      video.style.display = "none";
-      stream.getTracks().forEach(track => track.stop());
-      capturedImage = canvas;
-    });
+// CONFIRM CROP
+confirmCrop.onclick=()=>{
+  finalImage=cropper.getCroppedCanvas();
+  cropper.destroy();
+  confirmCrop.classList.add("hidden");
+  extract.classList.remove("hidden");
+};
 
-    extractBtn.addEventListener("click", () => {
-      let source = null;
+// OCR
+extract.onclick=()=>{
+  extract.textContent="Extracting…";
+  Tesseract.recognize(finalImage,"eng")
+  .then(({data:{text}})=>{
+    output.value=text;
+    extract.textContent="Extract Text";
+  });
+};
 
-      if (capturedImage) {
-        source = capturedImage;
-      } else if (imageInput.files.length) {
-        source = imageInput.files[0];
-      } else {
-        alert("Upload an image or use the camera.");
-        return;
-      }
+// COPY
+document.getElementById("copy").onclick=()=>{
+  output.select();
+  document.execCommand("copy");
+  alert("Copied!");
+};
+</script>
 
-      extractBtn.disabled = true;
-      extractBtn.textContent = "Extracting...";
-
-      Tesseract.recognize(source, "eng")
-        .then(({ data: { text } }) => {
-          output.value = text;
-          extractBtn.disabled = false;
-          extractBtn.textContent = "Extract Text";
-        })
-        .catch(() => {
-          alert("OCR failed. Try a clearer image.");
-          extractBtn.disabled = false;
-          extractBtn.textContent = "Extract Text";
-        });
-    });
-
-    copyBtn.addEventListener("click", () => {
-      output.select();
-      document.execCommand("copy");
-      alert("Text copied!");
-    });
-  </script>
 </body>
 </html>
