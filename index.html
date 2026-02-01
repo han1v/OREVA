@@ -3,8 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OREVA OCR – Free Image to Text</title>
 
+<title>OREVA OCR – Free Image to Text Converter Online</title>
+
+<!-- ================= SEO ================= -->
+<meta name="description" content="OREVA OCR is a free online OCR tool to convert images and PDFs into editable text. Scan text using camera, gallery, files or PDF directly in your browser.">
+<meta name="keywords" content="free ocr, image to text, pdf ocr, online ocr tool, camera ocr, extract text from image">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (WhatsApp / Facebook / LinkedIn) -->
+<meta property="og:title" content="OREVA OCR – Free Image to Text Converter">
+<meta property="og:description" content="Convert images and PDFs to editable text using OREVA OCR. 100% free, privacy-first, works directly in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://orevaorg.github.io/OREVA/">
+<meta property="og:image" content="https://orevaorg.github.io/OREVA/logo.PNG">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OREVA OCR – Free OCR Tool">
+<meta name="twitter:description" content="Free online OCR tool to scan text from images and PDFs using your camera or files.">
+
+<!-- ================= FREE USER TRACKING ================= -->
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XXXXXXXXXX', {
+    anonymize_ip: true
+  });
+</script>
+
+<!-- ================= LIBRARIES ================= -->
 <!-- OCR -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
@@ -16,7 +48,6 @@
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 
 <style>
-/* 🌍 System font stack (best UX) */
 :root {
   --font-system: system-ui, -apple-system, BlinkMacSystemFont,
                  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -79,10 +110,6 @@ button {
   cursor: pointer;
 }
 
-button.secondary {
-  background-color: #1e293b;
-}
-
 button:disabled {
   background-color: #475569;
   cursor: not-allowed;
@@ -107,9 +134,7 @@ textarea {
   font-family: var(--font-system);
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 .note {
   margin-top: 10px;
@@ -117,7 +142,6 @@ textarea {
   opacity: 0.7;
 }
 
-/* 📘 About section */
 .about {
   background-color: #020617;
   padding: 28px 20px;
@@ -163,25 +187,12 @@ textarea {
 </div>
 </main>
 
-<!-- ABOUT SECTION -->
 <section class="about">
   <h2>About OREVA OCR</h2>
-  <p>
-    OREVA OCR is a free online tool that converts images and scanned documents
-    into editable text directly in your browser.
-  </p>
-  <p>
-    You can scan text using your phone camera, upload images from your gallery,
-    select files from your device, or extract text from PDF documents.
-  </p>
-  <p>
-    🔐 Privacy first: All OCR processing happens locally on your device.
-    No images or documents are uploaded or stored.
-  </p>
-  <p>
-    OREVA OCR is designed for students, professionals, and everyday users
-    who need fast and simple text extraction without installing apps.
-  </p>
+  <p>OREVA OCR is a free online tool that converts images and scanned documents into editable text directly in your browser.</p>
+  <p>You can scan text using your phone camera, upload images from your gallery, select files from your device, or extract text from PDF documents.</p>
+  <p>🔐 Privacy first: All OCR processing happens locally on your device. No images or documents are uploaded or stored.</p>
+  <p>We use anonymous analytics to understand usage and improve the tool. No personal data is collected.</p>
 </section>
 
 <script>
@@ -194,7 +205,6 @@ const output = document.getElementById("output");
 let cropper;
 let finalImage;
 
-// Handle file / camera / PDF
 fileInput.addEventListener("change", async () => {
   const file = fileInput.files[0];
   if (!file) return;
@@ -225,10 +235,7 @@ function startCrop() {
   okBtn.classList.remove("hidden");
 
   if (cropper) cropper.destroy();
-  cropper = new Cropper(preview, {
-    viewMode: 1,
-    autoCropArea: 1
-  });
+  cropper = new Cropper(preview, { viewMode: 1, autoCropArea: 1 });
 }
 
 okBtn.addEventListener("click", () => {
